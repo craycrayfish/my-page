@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{ page.title | default: site.title }}</title>
+  <meta name="description" content="{{ page.description | default: site.description }}">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --bg: #f5f0e8;
+      --text: #1c1c1c;
+      --muted: #7a6f5e;
+      --accent: #8b5e3c;
+      --rule: rgba(28, 28, 28, 0.14);
+      --serif: 'Lora', Georgia, serif;
+      --mono: 'JetBrains Mono', 'Courier New', monospace;
+      --col: clamp(480px, 65vw, 1100px);
+      --pad: clamp(1.5rem, 5vw, 3rem);
+      --title-link: #4a4440;
+    }
+
+    [data-theme="dark"] {
+      --bg: #1a1714;
+      --text: #e8e0d0;
+      --muted: #9a8f7e;
+      --accent: #c4895a;
+      --rule: rgba(232, 224, 208, 0.12);
+      --title-link: #f0ece4;
+    }
+
+    html {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--serif);
+      font-size: 17px;
+      line-height: 1.75;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    main {
+      max-width: var(--col);
+      width: 100%;
+      margin: 0 auto;
+      padding: calc(3rem + clamp(2rem, 8vw, 4rem)) var(--pad) clamp(3rem, 8vw, 5rem);
+      flex: 1;
+    }
+
+    /* ── Header ── */
+    .site-header {
+      margin-bottom: 3.5rem;
+    }
+
+    .site-header h1 {
+      font-family: var(--serif);
+      font-weight: 600;
+      font-size: clamp(2.4rem, 6vw, 3.6rem);
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+    }
+
+    .site-header .tagline {
+      font-family: var(--mono);
+      font-size: 0.75rem;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-top: 0.65rem;
+    }
+
+    /* ── Section structure ── */
+    .section {
+      margin-top: 3rem;
+      padding-top: 2.5rem;
+      border-top: 1px solid var(--rule);
+    }
+
+    .section-label {
+      font-family: var(--mono);
+      font-size: 1rem;
+      font-weight: 500;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 1.4rem;
+    }
+
+    /* ── About ── */
+    .about p:not(.section-label) {
+      font-size: 1.05rem;
+      line-height: 1.8;
+      color: var(--text);
+    }
+
+    /* ── Work & Projects ── */
+    .entries {
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+      position: relative;
+      padding-left: 1.5rem;
+    }
+
+    .entries::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0.5rem;
+      bottom: 0.5rem;
+      width: 1px;
+      background: var(--rule);
+    }
+
+    .entry {
+      display: block;
+      position: relative;
+    }
+
+    .entry::before {
+      content: '';
+      position: absolute;
+      left: -1.5rem;
+      top: 0.4rem;
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--muted);
+      transform: translateX(-50%);
+    }
+
+    .entry-body {}
+
+    .entry-title {
+      font-family: var(--serif);
+      font-weight: 600;
+      font-size: 1rem;
+      line-height: 1.4;
+      margin-bottom: 0.15rem;
+    }
+
+    .entry-meta {
+      font-family: var(--mono);
+      font-size: 0.68rem;
+      color: var(--muted);
+      letter-spacing: 0.05em;
+      margin-bottom: 0.4rem;
+    }
+
+    .entry-desc {
+      font-size: 0.93rem;
+      line-height: 1.7;
+      color: var(--muted);
+    }
+
+    .entry-title a {
+      color: var(--title-link);
+      text-decoration: none;
+      border-bottom: 1px solid var(--title-link);
+      transition: opacity 0.15s;
+    }
+
+    .entry-title a:hover {
+      opacity: 0.7;
+    }
+
+    .entry-desc a {
+      color: var(--accent);
+      text-decoration: none;
+      border-bottom: 1px solid transparent;
+      transition: border-color 0.15s;
+    }
+
+    .entry-desc a:hover {
+      border-bottom-color: var(--accent);
+    }
+
+    /* ── Links ── */
+    .links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.2rem 0;
+      align-items: center;
+    }
+
+    .links a {
+      font-family: var(--mono);
+      font-size: 0.78rem;
+      letter-spacing: 0.05em;
+      color: var(--accent);
+      text-decoration: none;
+      border-bottom: 1px solid transparent;
+      transition: border-color 0.15s ease;
+      padding-bottom: 1px;
+    }
+
+    .links a:hover {
+      border-bottom-color: var(--accent);
+    }
+
+    .links .sep {
+      font-family: var(--mono);
+      color: var(--rule);
+      margin: 0 0.75rem;
+      font-size: 0.8rem;
+      user-select: none;
+    }
+
+    /* ── Nav bar ── */
+    .site-nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      background: var(--bg);
+      border-bottom: 1px solid var(--rule);
+      transition: background 0.25s, border-color 0.25s;
+    }
+
+    .nav-inner {
+      max-width: var(--col);
+      margin: 0 auto;
+      padding: 0 var(--pad);
+      height: 3rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .nav-tabs {
+      display: flex;
+      gap: 1.75rem;
+    }
+
+    .nav-tab {
+      font-family: var(--mono);
+      font-size: 0.68rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--muted);
+      text-decoration: none;
+      padding-bottom: 2px;
+      border-bottom: 1px solid transparent;
+      transition: color 0.15s, border-color 0.15s;
+    }
+
+    .nav-tab:hover,
+    .nav-tab.active {
+      color: var(--text);
+      border-bottom-color: var(--text);
+    }
+
+    /* ── Nav socials ── */
+    .nav-socials {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .nav-social {
+      display: flex;
+      align-items: center;
+      color: var(--muted);
+      text-decoration: none;
+      transition: color 0.15s;
+    }
+
+    .nav-social:hover {
+      color: var(--text);
+    }
+
+    /* ── Theme toggle ── */
+    .theme-toggle-wrap {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .toggle-icon {
+      font-family: var(--mono);
+      font-size: 0.75rem;
+      color: var(--muted);
+      user-select: none;
+      line-height: 1;
+      transition: color 0.25s;
+    }
+
+    .theme-toggle {
+      position: relative;
+      width: 2.75rem;
+      height: 1.5rem;
+      border-radius: 999px;
+      background: var(--rule);
+      border: 1px solid var(--muted);
+      cursor: pointer;
+      padding: 0;
+      transition: background 0.25s, border-color 0.25s;
+    }
+
+    .theme-toggle::before {
+      content: '';
+      position: absolute;
+      top: 0.17rem;
+      left: 0.17rem;
+      width: 1.1rem;
+      height: 1.1rem;
+      border-radius: 50%;
+      background: var(--muted);
+      transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1), background 0.25s;
+    }
+
+    .theme-toggle[aria-checked="true"]::before {
+      transform: translateX(1.25rem);
+      background: var(--accent);
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 480px) {}
+  </style>
+  <script>
+    (function () {
+      var stored = localStorage.getItem('theme');
+      var preferred = stored || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+      document.documentElement.setAttribute('data-theme', preferred);
+    })();
+  </script>
+</head>
+<body>
+  <nav class="site-nav">
+    <div class="nav-inner">
+      <div class="nav-socials">
+        <a href="https://github.com/craycrayfish" target="_blank" rel="noopener" class="nav-social" aria-label="GitHub">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+        </a>
+        <a href="https://x.com/shawncytan" target="_blank" rel="noopener" class="nav-social" aria-label="X">
+          <svg width="15" height="15" viewBox="0 0 16 16" fill="currentColor"><path d="M12.6.75h2.454l-5.36 6.142L16 15.25h-4.937l-3.867-5.07-4.425 5.07H.316l5.733-6.57L0 .75h5.063l3.495 4.633L12.601.75Zm-.86 13.028h1.36L4.323 2.145H2.865z"/></svg>
+        </a>
+        <a href="https://www.linkedin.com/in/shawn-cy-tan/" target="_blank" rel="noopener" class="nav-social" aria-label="LinkedIn">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M0 1.146C0 .513.526 0 1.175 0h13.65C15.474 0 16 .513 16 1.146v13.708c0 .633-.526 1.146-1.175 1.146H1.175C.526 16 0 15.487 0 14.854V1.146zm4.943 12.248V6.169H2.542v7.225h2.401zm-1.2-8.212c.837 0 1.358-.554 1.358-1.248-.015-.709-.52-1.248-1.342-1.248-.822 0-1.359.54-1.359 1.248 0 .694.521 1.248 1.327 1.248h.016zm4.908 8.212V9.359c0-.216.016-.432.08-.586.173-.431.568-.878 1.232-.878.869 0 1.216.662 1.216 1.634v3.865h2.401V9.25c0-2.22-1.184-3.252-2.764-3.252-1.274 0-1.845.7-2.165 1.193v.025h-.016a5.54 5.54 0 0 1 .016-.025V6.169h-2.4c.03.678 0 7.225 0 7.225h2.4z"/></svg>
+        </a>
+      </div>
+      <div class="nav-tabs">
+        <a href="/" class="nav-tab{% if page.url == '/' %} active{% endif %}">home</a>
+        <a href="https://x.com/shawncytan/articles" target="_blank" rel="noopener" class="nav-tab{% if page.url contains '/blog' %} active{% endif %}">blog <svg style="display:inline;vertical-align:middle;margin-bottom:0.1em" width="9" height="9" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 2H2a1 1 0 0 0-1 1v7a1 1 0 0 0 1 1h7a1 1 0 0 0 1-1V7"/><polyline points="8 1 11 1 11 4"/><line x1="11" y1="1" x2="5.5" y2="6.5"/></svg></a>
+      </div>
+      <div class="theme-toggle-wrap">
+        <span class="toggle-icon" aria-hidden="true">☀</span>
+        <button class="theme-toggle" role="switch" aria-checked="false" aria-label="Toggle dark mode"></button>
+        <span class="toggle-icon" aria-hidden="true">☽</span>
+      </div>
+    </div>
+  </nav>
+  <main>
+    {{ content }}
+  </main>
+  <footer style="border-top:1px solid var(--rule);padding:1.5rem var(--pad);text-align:center;">
+    <span style="font-family:var(--mono);font-size:0.72rem;letter-spacing:0.08em;color:var(--muted);">© 2026 Shawn Tan</span>
+  </footer>
+  <script>
+    (function () {
+      var btn = document.querySelector('.theme-toggle');
+      var isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+      btn.setAttribute('aria-checked', isDark ? 'true' : 'false');
+      btn.addEventListener('click', function () {
+        var next = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+        document.documentElement.setAttribute('data-theme', next);
+        localStorage.setItem('theme', next);
+        btn.setAttribute('aria-checked', next === 'dark' ? 'true' : 'false');
+      });
+    })();
+  </script>
+</body>
+</html>
